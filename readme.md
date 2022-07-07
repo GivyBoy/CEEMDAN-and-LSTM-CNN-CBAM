@@ -1,4 +1,4 @@
-# Paper: `Forecasting gold price using a novel hybrid model with ICEEMDAN and LSTM-CNN-CBAM by Yanhui Liang, Yu Lin, and Qin Lu`
+# Paper: Forecasting gold price using a novel hybrid model with ICEEMDAN and LSTM-CNN-CBAM by Yanhui Liang, Yu Lin, and Qin Lu
 
 This repository holds the code for a paper I found interesting and decided to replicate. I was already interested in the Complete Ensemble Empirical Mode Decomposition with Adaptive Noise (CEEMDAN) algorithm, so this paper piqued my interest. I didn't use the Improved CEEMDAN (ICEEMDAN) algo, because I already had an implementation of the CEEMDAN algorithm that I, coincidentally, implemented a couple of days prior to finding this paper. It was fascinating implementing this project, since I have little to no deep learning experience. I learned a lot and I will definitely be exploring more deep learning methods.
 
