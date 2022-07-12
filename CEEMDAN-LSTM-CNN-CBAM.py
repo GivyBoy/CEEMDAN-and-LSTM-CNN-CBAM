@@ -1,12 +1,19 @@
+
+"""models needed to create the Neural Nets"""
 from keras.models import Sequential
-from keras.layers import Conv1D, Add, Activation, Dropout, Dense, LSTM, Flatten, MaxPooling1D
+from keras.layers import Conv1D, Activation, Dropout, Dense, LSTM, Flatten, MaxPooling1D
 import tensorflow as tf
 
+"""needed for scaling and calculating the performance of the model"""
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 
+
+"""needed for the decomposition of the time series"""
 from PyEMD import CEEMDAN
 
+
+"""needed for downloading and wrangling data"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,18 +21,23 @@ import yfinance as yf
 import random
 import warnings
 
+
+"""used to stop warnings from showing up in the console"""
 warnings.filterwarnings('ignore')
 random.seed(17)
 
-LOOK_BACK = 10
-SPLIT = 0.8
-EPOCHS = 100
-BATCH_SIZE = 100
+"""CONSTANTS THAT ARE USED THROUGHOUT THE MODEL"""
+LOOK_BACK = 10  # the number of previous data points used by the model to predict future time series
+SPLIT = 0.8  # the percentage of the data that will be used as the test-set
+EPOCHS = 100  # the number of training iterations that the model will go through
+BATCH_SIZE = 100  # the number of training samples that the model uses in on iteration (epoch)
+YEAR = 2000  # start year of the data
+TICKER = "^GSPC"  # ticker of the stock (or financial security) that will be analyzed and predicted
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-data = yf.download("^GSPC", start="2000-01-01")[["Adj Close"]]
-data.columns = ["close"]
+data = yf.download(TICKER, start=f"{YEAR}-01-01")[["Adj Close"]]  # downloads the data
+data.columns = ["close"]  # renames the column of the data
 
 
 def get_CEEMD_residue(data: pd.DataFrame):
@@ -91,7 +103,7 @@ def plot_IMFs(IMFs: np.ndarray, residue: np.ndarray, num_IMFs: int, data: pd.Dat
     plt.show()
 
 
-def create_dataset(dataset):
+def create_dataset(dataset: np.ndarray):
     dataX, dataY = [], []
 
     for i in range(len(dataset) - LOOK_BACK - 1):
@@ -102,7 +114,8 @@ def create_dataset(dataset):
     return np.array(dataX), np.array(dataY)
 
 
-def LSTM_CNN_CBAM(dataset, layer=128):
+def LSTM_CNN_CBAM(dataset: np.ndarray, layer: int = 128):
+
     dataset = dataset.astype('float32')
     dataset = np.reshape(dataset, (-1, 1))
 
@@ -149,6 +162,8 @@ def LSTM_CNN_CBAM(dataset, layer=128):
 
 
 def run_model(IMFs):
+
+
     IMF_predict_list = []
     error_list = []
 
